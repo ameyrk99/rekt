@@ -18,3 +18,7 @@
 - suspense
 - romance
 - cooking
+
+### Images:
+
+In ./images as book_i.jpg where i is id
