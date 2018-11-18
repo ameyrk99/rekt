@@ -6,3 +6,7 @@ rekt_main.o: rekt_main.cpp book.h
 	$(CXX) $(CXXFLAGS) -c rekt_main.cpp
 book.o: book.h book.cpp
 	$(CXX) $(CXXFLAGS) -c book.cpp
+
+clean:
+	rm *.o rekt
+
