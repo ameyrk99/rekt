@@ -4,9 +4,11 @@
 #include <algorithm>
 #include <cstdlib>
 #include <fstream>
+#include <sstream>
 #include "book.h"
 
-std::vector <Book> Collection::get_list() {
+std::vector <Book> Collection::get_list() 
+{
     return this->list;
 }
 
@@ -98,3 +100,90 @@ std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, f
 
     return rand_list;
 }
+
+UserFile::UserFile(Collection origList)
+{
+    l = origList.get_list();
+}
+
+void UserFile::read_file(std::string filename)
+{
+    std::ifstream inFile;
+    std::string line;
+    inFile.open(filename);
+
+    if (!inFile.is_open())
+    {
+        std::cout << "Unable to open file!" << std::endl;
+        std::exit(0);
+    }
+
+    while(getline(inFile, line))
+    {
+        std::stringstream linestream(line);
+        std::string idNum;
+
+        int i = 0;
+        while (getline(linestream, idNum, '~'))
+        {
+            if (i == 0)
+            {
+                std::cout << idNum << ", ";
+                user_list.push_back(std::stoi(idNum));
+                i++;
+            }
+            i++;
+        }
+    }
+
+    inFile.close();
+}
+
+void UserFile::add_book(int idn)
+{
+    Book temp = l[idn];
+    int toAdd = temp.id;
+    int i = 0;
+    while (i < (user_list.size()))      // Checks for duplicates
+    {
+        if (toAdd == user_list[i])
+        {
+            return;
+        }
+        i++;
+    }
+    user_list.push_back(toAdd);
+}
+
+void UserFile::delete_book(int idn)
+{
+    Book temp = l[idn];
+    int toAdd = temp.id;
+    int i = 0; 
+    while (i < (user_list.size()))
+    {
+        if (toAdd == user_list[i])
+        {
+            user_list.erase(user_list.begin() + i);
+            break;
+        }
+        i++;
+    }
+}
+
+void UserFile::output_file(std::string filename)
+{
+    std::ofstream outFile;
+    outFile.open(filename);
+    int i = 0;
+
+    while (i < (user_list.size()))
+    {
+        Book temp = l[user_list[i]];
+        outFile << temp.id << "~" << temp.title << "~" << temp.author << "~" << temp.link << std::endl;
+        i++;
+    }
+}
+
+UserFile::~UserFile()
+{}
