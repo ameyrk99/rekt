@@ -27,20 +27,20 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     randListWindow.cpp \
-    choicewindow.cpp
+    choicewindow.cpp \
+    userwindow.cpp
 
 HEADERS += \
     randListWindow.h \
-    choicewindow.h
+    choicewindow.h \
+    userwindow.h
 
 FORMS += \
     choicewindow.ui \
-    randlistwindow.ui
+    randlistwindow.ui \
+    userwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-RESOURCES += \
-    recommuiresources.qrc

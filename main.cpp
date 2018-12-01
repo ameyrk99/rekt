@@ -17,33 +17,12 @@
 
 #include "randListWindow.h"
 #include "choicewindow.h"
+#include "userwindow.h"
 
 Collection *books=new Collection();
 //UserFile userList(books);
 
-void print_books(std::vector <Book> rand_list, std::vector <std::string> genres, Collection *books)
-{
-    QWidget* window=new QWidget;
-    QVBoxLayout* compile=new QVBoxLayout;
-    for(int i=0;i<rand_list.size()-1;i++)
-    {
-        //int genre_id = rand_list[i].id/40; //for the genre
-        //std::cout<<"# "<<rand_list[i].id<<" ["<<genres[genre_id]<<"]\n"<<"Id:\t"<<rand_list[i].id<<"\nAuthor:\t"<<rand_list[i].author<<"\nTitle:\t"<<rand_list[i].title<<"\n\n"<<std::endl;
-
-        QSignalMapper *mapper=new QSignalMapper();
-        QPushButton *more_info=new QPushButton(QString::fromStdString(rand_list[i].title));
-        compile->addWidget(more_info);
-        QObject::connect(more_info, SIGNAL(clicked()), mapper, SLOT(map()));
-        mapper->setMapping(more_info, rand_list[i].id);
-        QObject::connect(mapper, SIGNAL(mapped(int)), books, SLOT(extra_info(int)));
-    }
-    QPushButton *exit=new QPushButton("Exit");
-    compile->addWidget(exit);
-    QObject::connect(exit, SIGNAL(clicked()), window, SLOT(close()));
-    window->setLayout(compile);
-    window->show();
-}
-
+void print_books(std::vector <Book> rand_list, std::vector <std::string> genres, Collection *books);
 
 int main(int argc, char *argv[])
 {
@@ -95,5 +74,32 @@ int main(int argc, char *argv[])
     print_books(rand_gen, genres, books);
     books->output_file("userData.dat");
 
+    UserWindow u;
+
+    u.show();
+
     return a.exec();
+}
+
+void print_books(std::vector <Book> rand_list, std::vector <std::string> genres, Collection *books)
+{
+    QWidget* window=new QWidget;
+    QVBoxLayout* compile=new QVBoxLayout;
+    for(int i=0;i<rand_list.size()-1;i++)
+    {
+        //int genre_id = rand_list[i].id/40; //for the genre
+        //std::cout<<"# "<<rand_list[i].id<<" ["<<genres[genre_id]<<"]\n"<<"Id:\t"<<rand_list[i].id<<"\nAuthor:\t"<<rand_list[i].author<<"\nTitle:\t"<<rand_list[i].title<<"\n\n"<<std::endl;
+
+        QSignalMapper *mapper=new QSignalMapper();
+        QPushButton *more_info=new QPushButton(QString::fromStdString(rand_list[i].title));
+        compile->addWidget(more_info);
+        QObject::connect(more_info, SIGNAL(clicked()), mapper, SLOT(map()));
+        mapper->setMapping(more_info, rand_list[i].id);
+        QObject::connect(mapper, SIGNAL(mapped(int)), books, SLOT(extra_info(int)));
+    }
+    QPushButton *exit=new QPushButton("Exit");
+    compile->addWidget(exit);
+    QObject::connect(exit, SIGNAL(clicked()), window, SLOT(close()));
+    window->setLayout(compile);
+    window->show();
 }
