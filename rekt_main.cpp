@@ -4,12 +4,15 @@
 #include <fstream>
 #include "book.h"
 
+Collection books;
+UserFile userList(books);
+
 void print_books(std::vector <Book> rand_list, std::vector <std::string> genres);
 
 int main(int argc, char *argv[])
 {
     std::vector <std::string> genres = {"crime", "fiction", "fantasy", "non-fiction", "mystery", "clàssics", "mangá", "sci-fi", "historical", "horror", "thriller", "humor", "suspense", "romance", "cookbook"};
-    Collection books;
+    // Collection books;
 
     books.read_file();
 
@@ -47,7 +50,7 @@ int main(int argc, char *argv[])
     std::cout << "\n";
     print_books(rand_gen, genres);
 
-    UserFile userList(books);
+    // UserFile userList(books);
     if (argc > 1) {
         userList.read_file(argv[1]);
     }
