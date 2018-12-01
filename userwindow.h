@@ -11,8 +11,7 @@ namespace Ui {
 class UserWindow;
 }
 
-class UserWindow : public QMainWindow, public Collection
-{
+class UserWindow : public QMainWindow {
     Q_OBJECT
 
 public:

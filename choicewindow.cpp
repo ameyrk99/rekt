@@ -1,5 +1,6 @@
 #include "choicewindow.h"
 #include "ui_choicewindow.h"
+#include "randListWindow.h"
 #include <iostream>
 #include <string>
 
@@ -84,4 +85,96 @@ void ChoiceWindow::new_Rating_Changed(int newRating)
        ui->dial_rating->setValue(newRating); /*sets the value of the slider to the user designated value*/
 
        connect_rating_Signals();
+}
+
+void ChoiceWindow::on_genre_crime_clicked()
+{
+    this->genres_chosen.push_back(0);
+}
+
+void ChoiceWindow::on_genre_ficiton_clicked()
+{
+    this->genres_chosen.push_back(1);
+}
+
+void ChoiceWindow::on_genre_non_fiction_clicked()
+{
+    this->genres_chosen.push_back(2);
+}
+
+void ChoiceWindow::on_genre_mystery_clicked()
+{
+    this->genres_chosen.push_back(3);
+}
+
+void ChoiceWindow::on_genre_classic_clicked()
+{
+    this->genres_chosen.push_back(4);
+}
+
+void ChoiceWindow::on_genre_manga_clicked()
+{
+    this->genres_chosen.push_back(5);
+}
+
+void ChoiceWindow::on_genre_sci_fi_clicked()
+{
+    this->genres_chosen.push_back(6);
+}
+
+void ChoiceWindow::on_genre_historical_clicked()
+{
+    this->genres_chosen.push_back(7);
+}
+
+void ChoiceWindow::on_genre_horror_clicked()
+{
+    this->genres_chosen.push_back(8);
+}
+
+void ChoiceWindow::on_genre_romance_clicked()
+{
+    this->genres_chosen.push_back(9);
+}
+
+void ChoiceWindow::on_genre_thriller_clicked()
+{
+    this->genres_chosen.push_back(10);
+}
+
+void ChoiceWindow::on_genre_cookbook_clicked()
+{
+    this->genres_chosen.push_back(11);
+}
+
+void ChoiceWindow::on_genre_suspense_clicked()
+{
+    this->genres_chosen.push_back(12);
+}
+
+void ChoiceWindow::on_genre_humor_clicked()
+{
+    this->genres_chosen.push_back(13);
+}
+
+void ChoiceWindow::on_pushButton_clicked()
+{
+    this->year = ui->slider_year->value();
+    this->rating = ui->dial_rating->value();
+
+    Collection *books=new Collection();
+    std::vector <std::string> genres = {"crime", "fiction", "fantasy", "non-fiction", "mystery", "clàssics", "mangá", "sci-fi", "historical", "horror", "thriller", "humor", "suspense", "romance", "cookbook"};
+    books->read_file();
+    books->read_user_file("userData.dat");
+
+    std::vector <Book> rand_gen = books->get_rand_list(this->genres_chosen, this->rating, this->year);
+
+    print_books(rand_gen, genres, books);
+
+    books->output_file("userData.dat");
+}
+
+void ChoiceWindow::on_pushButton_2_clicked()
+{
+    this->close();
 }

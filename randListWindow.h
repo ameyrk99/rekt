@@ -45,6 +45,8 @@ public slots:
         void read_user_file(std::string filename);
         void delete_book(int idn);
         void output_file(std::string filename);
+
+friend class UserWindow;
 };
 
 class RandList : public QMainWindow
@@ -58,5 +60,7 @@ public:
 private:
     Ui::RandList *ui;
 };
+
+void print_books(std::vector <Book> rand_list, std::vector <std::string> genres, Collection *books);
 
 #endif // BOOKS_H

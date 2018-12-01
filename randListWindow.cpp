@@ -123,8 +123,9 @@ std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, f
         for(int j = 0; j < 20 && book_not_done; j++) {                              /*Generates random indexes in range 20 times*/
             int potential_book = (std::rand()%40)+(40*genres_indexes[i]);           /*Generate random int from 0 - 39, and scale it up for the required genre*/
 
+            int duplicate = this->already_there(potential_book, rand_list);
             if(this->list[potential_book].year >= year && this->list[potential_book].rating >= rating &&
-                    this->in_user_list((potential_book))) {
+                    this->in_user_list((potential_book)) && duplicate) {
                 /*Check if requirements are satisfied*/
                 rand_list.push_back(this->list[potential_book]);
                 book_not_done--;
@@ -261,4 +262,29 @@ void Collection::output_file(std::string filename)
         i++;
     }
     outFile.close();
+}
+
+void print_books(std::vector <Book> rand_list, std::vector <std::string> genres, Collection *books)
+{
+    QWidget* window=new QWidget;
+    QVBoxLayout* compile=new QVBoxLayout;
+    for(int i=0;i<rand_list.size()-1;i++)
+    {
+        //int genre_id = rand_list[i].id/40; //for the genre
+        //std::cout<<"# "<<rand_list[i].id<<" ["<<genres[genre_id]<<"]\n"<<"Id:\t"<<rand_list[i].id<<"\nAuthor:\t"<<rand_list[i].author<<"\nTitle:\t"<<rand_list[i].title<<"\n\n"<<std::endl;
+
+        QSignalMapper *mapper=new QSignalMapper();
+        QPushButton *more_info=new QPushButton(QString::fromStdString(rand_list[i].title));
+        compile->addWidget(more_info);
+        QObject::connect(more_info, SIGNAL(clicked()), mapper, SLOT(map()));
+        mapper->setMapping(more_info, rand_list[i].id);
+        QObject::connect(mapper, SIGNAL(mapped(int)), books, SLOT(extra_info(int)));
+    }
+
+    QPushButton *exit=new QPushButton("Exit");
+    compile->addWidget(exit);
+    QObject::connect(exit, SIGNAL(clicked()), window, SLOT(close()));
+
+    window->setLayout(compile);
+    window->show();
 }
