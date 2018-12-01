@@ -28,7 +28,7 @@ std::vector <Book> Collection::get_list()
     return this->list;
 }
 
-std::vector <Book> Collection::get_user_list()
+std::vector <int> Collection::get_user_list()
 {
     return this->user_list;
 }
@@ -38,10 +38,10 @@ Book Collection::get_book(int n)
     return this->list[n];
 }
 
-Book Collection::get_user_list_book(int n)
-{
-    return this->user_list[n];
-}
+//Book Collection::get_user_list_book(int n)
+//{
+//    return this->user_list[n];
+//}
 
 void Collection::read_file()
 {
@@ -123,7 +123,8 @@ std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, f
         for(int j = 0; j < 20 && book_not_done; j++) {                              /*Generates random indexes in range 20 times*/
             int potential_book = (std::rand()%40)+(40*genres_indexes[i]);           /*Generate random int from 0 - 39, and scale it up for the required genre*/
 
-            if(this->list[potential_book].year >= year && this->list[potential_book].rating >= rating) {
+            if(this->list[potential_book].year >= year && this->list[potential_book].rating >= rating &&
+                    this->in_user_list((potential_book))) {
                 /*Check if requirements are satisfied*/
                 rand_list.push_back(this->list[potential_book]);
                 book_not_done--;
@@ -134,6 +135,24 @@ std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, f
     }
 
     return rand_list;
+}
+
+int Collection::already_there(int idn, std::vector <Book> lst) {
+    for(int i = 0; i < lst.size(); i++) {
+        if(idn == lst[i].id) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int Collection::in_user_list(int idn){
+    for(int i = 0; i < this->user_list.size(); i++) {
+        if(idn == this->user_list[i]) {
+            return 0;
+        }
+    }
+    return 1;
 }
 
 void Collection::extra_info(int id)
@@ -176,36 +195,12 @@ void Collection::extra_info(int id)
     window->show();
 }
 
+/*User List Functions*/
+
 void Collection::add_book(int id)
 {
-    //adds book
-    //bool duplicate=false;
-    Book b1=get_book(id);
-    //checks for duplicates
-    /*for(int i=0;i<book_lists.size()&&!duplicate;i++)
-    {
-        std::cout<<"test"<<std::endl;
-        Book b2=get_user_list_book(i);
-
-        if(b1.id==b2.id)
-        {
-            duplicate=true;
-            QWidget* window=new QWidget;
-            QLabel *youdumby=new QLabel("Book is already in your list!");
-            QPushButton *okay=new QPushButton("OK");
-            QObject::connect(okay, SIGNAL(clicked()), window, SLOT(close()));
-            QVBoxLayout *notify=new QVBoxLayout;
-            notify->addWidget(youdumby);
-            notify->addWidget(okay);
-            window->setLayout(notify);
-            window->show();
-        }
-    }*/
-
-    //displays accomodating message
-   //if(duplicate==false)
-   //{
-       get_user_list().push_back(b1);
+//    this->read_user_file("userData.dat");
+       this->user_list.push_back(id);
        QWidget* window=new QWidget;
        QLabel *label=new QLabel("Book has been added to your list!");
        QPushButton *okay=new QPushButton("OK");
@@ -215,16 +210,10 @@ void Collection::add_book(int id)
        notify->addWidget(okay);
        window->setLayout(notify);
        window->show();
-   //}
+      this->output_file("userData.dat");
 }
 
-
-UserFile::UserFile(Collection *origList)
-{
-    l = origList->get_list();
-}
-
-void UserFile::read_file(std::string filename)
+void Collection::read_user_file(std::string filename)
 {
     /*Reads file*/
     std::ifstream inFile;
@@ -248,66 +237,28 @@ void UserFile::read_file(std::string filename)
 
         pos = line.find(delimiter);
         test = std::stoi(line.substr(0, pos));
-        user_list.push_back(test);
+        this->user_list.push_back(test);
 //        line.erase(0, pos+1);
     }
 }
 
-void UserFile::add_book(int idn)
+void Collection::delete_book(int idn)
 {
-    Book temp = l[idn];
-    int toAdd = temp.id;
-    int i = 0;
-    while (i < (user_list.size()))      // Checks for duplicates
-    {
-        if (toAdd == user_list[i])
-        {
-            return;
-        }
-        i++;
-    }
-    user_list.push_back(toAdd);
+    std::remove(this->user_list.begin(), this->user_list.end(), idn);
+    this->output_file("userData.dat");
+    return;
 }
 
-void UserFile::delete_book(int idn)
-{
-    Book temp = l[idn];
-    int toAdd = temp.id;
-    int i = 0;
-    while (i < (user_list.size()))
-    {
-        if (toAdd == user_list[i])
-        {
-            user_list.erase(user_list.begin() + i);
-            break;
-        }
-        i++;
-    }
-}
-
-void UserFile::output_file(std::string filename)
+void Collection::output_file(std::string filename)
 {
     std::ofstream outFile;
     outFile.open(filename);
     int i = 0;
 
-    while (i < (user_list.size()))
+    while (i < (this->user_list.size()))
     {
-        Book temp = l[user_list[i]];
-        outFile << temp.id << std::endl;
-//        outFile << temp.id << "~" << temp.title << "~" << temp.author << "~" << temp.link << std::endl;
+        outFile<<this->user_list[i]<< std::endl;
         i++;
     }
+    outFile.close();
 }
-
-UserFile::~UserFile()
-{}
-
-
-
-
-
-
-
-
-

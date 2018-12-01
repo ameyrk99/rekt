@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
     std::vector <std::string> genres = {"crime", "fiction", "fantasy", "non-fiction", "mystery", "clàssics", "mangá", "sci-fi", "historical", "horror", "thriller", "humor", "suspense", "romance", "cookbook"};
 //    Collection *books=new Collection();
     books->read_file();
+    books->read_user_file("userData.dat");
 
     /*
      * Choice Window ----------------------------------------------------------------------------------------------------------------------------
@@ -92,12 +93,7 @@ int main(int argc, char *argv[])
 
 
     print_books(rand_gen, genres, books);
-
-    UserFile userList(books);
-//    std::cout<<userList.l.size()<<std::endl;
-    userList.read_file("userData.txt");
-    userList.user_list = {100, 23, 20, 4};
-    userList.output_file("userData.txt");
+    books->output_file("userData.dat");
 
     return a.exec();
 }
