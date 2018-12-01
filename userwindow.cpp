@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 
-UserWindow::UserWindow(QWidget *parent) :
+UserWindow::UserWindow(Collection *books, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::UserWindow)
 {
@@ -17,9 +17,8 @@ UserWindow::UserWindow(QWidget *parent) :
     model = new QStringListModel(this);
     QStringList list;
 
-    Collection books;
-    books.read_file();
-    books_stored=books.get_list();
+    this->books_stored= books->get_list();
+    this->id_list = books->get_user_list();
     QFont f("Avenir", 14, QFont::Cursive);
 
     QString book_chosen1;

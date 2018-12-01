@@ -9,6 +9,8 @@
 #include <QPointF>
 #include <QVector>
 
+#include "randListWindow.h"
+
 namespace Ui {
 class ChoiceWindow;
 }
@@ -20,6 +22,7 @@ class ChoiceWindow : public QMainWindow
 public:
     explicit ChoiceWindow(QWidget *parent = nullptr);
     ~ChoiceWindow();
+    Collection *books;
     std::vector <int> genres_chosen;
     int year;
     int rating;
@@ -50,6 +53,7 @@ private slots: /*adds a new slot that connects the two values into one slot*/
     void on_genre_humor_clicked();
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
+    void on_pushButton_3_clicked();
 };
 
 #endif // CHOICEWINDOW_H

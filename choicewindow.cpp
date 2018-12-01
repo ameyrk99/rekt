@@ -1,6 +1,7 @@
-#include "choicewindow.h"
+#include "userwindow.h"
 #include "ui_choicewindow.h"
 #include "randListWindow.h"
+#include "choicewindow.h"
 #include <iostream>
 #include <string>
 
@@ -11,6 +12,7 @@ ChoiceWindow::ChoiceWindow(QWidget *parent) :
     ui->setupUi(this);
     connect_Signals();
     connect_rating_Signals();
+    this->books = new Collection();
 }
 
 ChoiceWindow::~ChoiceWindow()
@@ -87,6 +89,34 @@ void ChoiceWindow::new_Rating_Changed(int newRating)
        connect_rating_Signals();
 }
 
+void ChoiceWindow::on_pushButton_clicked()
+{
+    this->year = ui->slider_year->value();
+    this->rating = ui->dial_rating->value();
+
+//    Collection *books=new Collection();
+    std::vector <std::string> genres = {"crime", "fiction", "fantasy", "non-fiction", "mystery", "clàssics", "mangá", "sci-fi", "historical", "horror", "thriller", "humor", "suspense", "romance", "cookbook"};
+    this->books->read_file();
+    this->books->read_user_file("userData.dat");
+
+    std::vector <Book> rand_gen = this->books->get_rand_list(this->genres_chosen, this->rating, this->year);
+
+    print_books(rand_gen, genres, this->books);
+
+    this->books->output_file("userData.dat");
+}
+
+void ChoiceWindow::on_pushButton_3_clicked()
+{
+    UserWindow u(books, this);
+    u.show();
+}
+
+void ChoiceWindow::on_pushButton_2_clicked()
+{
+    this->close();
+}
+
 void ChoiceWindow::on_genre_crime_clicked()
 {
     this->genres_chosen.push_back(0);
@@ -155,26 +185,4 @@ void ChoiceWindow::on_genre_suspense_clicked()
 void ChoiceWindow::on_genre_humor_clicked()
 {
     this->genres_chosen.push_back(13);
-}
-
-void ChoiceWindow::on_pushButton_clicked()
-{
-    this->year = ui->slider_year->value();
-    this->rating = ui->dial_rating->value();
-
-    Collection *books=new Collection();
-    std::vector <std::string> genres = {"crime", "fiction", "fantasy", "non-fiction", "mystery", "clàssics", "mangá", "sci-fi", "historical", "horror", "thriller", "humor", "suspense", "romance", "cookbook"};
-    books->read_file();
-    books->read_user_file("userData.dat");
-
-    std::vector <Book> rand_gen = books->get_rand_list(this->genres_chosen, this->rating, this->year);
-
-    print_books(rand_gen, genres, books);
-
-    books->output_file("userData.dat");
-}
-
-void ChoiceWindow::on_pushButton_2_clicked()
-{
-    this->close();
 }

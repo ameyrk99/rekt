@@ -15,7 +15,7 @@ class UserWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    explicit UserWindow(QWidget *parent = nullptr);
+    explicit UserWindow(Collection *books, QWidget *parent = nullptr);
     ~UserWindow();
     std::vector<Book> books_stored;
     std::vector<int> id_list;
