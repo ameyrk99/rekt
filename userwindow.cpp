@@ -17,15 +17,8 @@ UserWindow::UserWindow(Collection *books, QWidget *parent) :
     model = new QStringListModel(this);
     QStringList list;
 
-<<<<<<< HEAD
-//    Collection books;
-//    books.read_file();
-    books_stored = books->get_list();
-    id_list = books->get_user_list();
-=======
     this->books_stored= books->get_list();
     this->id_list = books->get_user_list();
->>>>>>> 27d234868f38afa613bcf74c3f4f8428d367279c
     QFont f("Avenir", 14, QFont::Cursive);
 
     QString book_chosen1;

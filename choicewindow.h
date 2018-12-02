@@ -24,7 +24,6 @@ public:
     ~ChoiceWindow();
     Collection *books;
     std::vector <int> genres_chosen;
-    Collection *books;
     int year;
     int rating;
 

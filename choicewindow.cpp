@@ -1,11 +1,7 @@
 #include "userwindow.h"
 #include "ui_choicewindow.h"
 #include "randListWindow.h"
-<<<<<<< HEAD
-#include "userwindow.h"
-=======
 #include "choicewindow.h"
->>>>>>> 27d234868f38afa613bcf74c3f4f8428d367279c
 #include <iostream>
 #include <string>
 
@@ -16,15 +12,9 @@ ChoiceWindow::ChoiceWindow(QWidget *parent) :
     ui->setupUi(this);
     connect_Signals();
     connect_rating_Signals();
-<<<<<<< HEAD
-
-    this->books=new Collection();
-//    std::vector <std::string> genres = {"crime", "fiction", "fantasy", "non-fiction", "mystery", "clàssics", "mangá", "sci-fi", "historical", "horror", "thriller", "humor", "suspense", "romance", "cookbook"};
-    books->read_file();
-    books->read_user_file("userData.dat");
-=======
     this->books = new Collection();
->>>>>>> 27d234868f38afa613bcf74c3f4f8428d367279c
+    this->books->read_file();
+    this->books->read_user_file("userData.dat");
 }
 
 ChoiceWindow::~ChoiceWindow()
@@ -108,8 +98,14 @@ void ChoiceWindow::on_pushButton_clicked()
 
 //    Collection *books=new Collection();
     std::vector <std::string> genres = {"crime", "fiction", "fantasy", "non-fiction", "mystery", "clàssics", "mangá", "sci-fi", "historical", "horror", "thriller", "humor", "suspense", "romance", "cookbook"};
-    this->books->read_file();
-    this->books->read_user_file("userData.dat");
+//    this->books->read_file();
+//    this->books->read_user_file("userData.dat");
+
+    if(this->genres_chosen.size() == 0) {
+            for(int i = 0; i < 14; i++) {
+                this->genres_chosen.push_back((i));
+       }
+    }
 
     std::vector <Book> rand_gen = this->books->get_rand_list(this->genres_chosen, this->rating, this->year);
 
@@ -198,40 +194,3 @@ void ChoiceWindow::on_genre_humor_clicked()
 {
     this->genres_chosen.push_back(13);
 }
-<<<<<<< HEAD
-
-void ChoiceWindow::on_pushButton_clicked()
-{
-    if(this->genres_chosen.size() == 0) {
-        for(int i = 0; i < 14; i++) {
-            this->genres_chosen.push_back((i));
-        }
-    }
-
-    this->year = ui->slider_year->value();
-    this->rating = ui->dial_rating->value();
-
-    Collection *books=new Collection();
-    std::vector <std::string> genres = {"crime", "fiction", "fantasy", "non-fiction", "mystery", "clàssics", "mangá", "sci-fi", "historical", "horror", "thriller", "humor", "suspense", "romance", "cookbook"};
-    books->read_file();
-    books->read_user_file("userData.dat");
-
-    std::vector <Book> rand_gen = books->get_rand_list(this->genres_chosen, this->rating, this->year);
-
-    print_books(rand_gen, genres, books);
-
-    books->output_file("userData.dat");
-}
-
-void ChoiceWindow::on_pushButton_3_clicked()
-{
-    UserWindow u(books, this);
-    u.show();
-}
-
-void ChoiceWindow::on_pushButton_2_clicked()
-{
-    this->close();
-}
-=======
->>>>>>> 27d234868f38afa613bcf74c3f4f8428d367279c
