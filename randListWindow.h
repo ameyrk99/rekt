@@ -31,8 +31,8 @@ protected:
 public:
         std::vector <Book> get_list();
         std::vector <int> get_user_list();
-//        int in_user_list(int idn);
-//        int already_there(int idn, std::vector <Book> lst);
+        int in_user_list(int idn);
+        int already_there(int idn, std::vector <Book> lst);
         Book get_book(int n);
 //        Book get_user_list_book(int n);
         void read_file();

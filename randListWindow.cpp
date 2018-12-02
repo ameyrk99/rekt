@@ -38,11 +38,6 @@ Book Collection::get_book(int n)
     return this->list[n];
 }
 
-//Book Collection::get_user_list_book(int n)
-//{
-//    return this->user_list[n];
-//}
-
 void Collection::read_file()
 {
     /*Reads file*/
@@ -105,40 +100,6 @@ void Collection::read_file()
     inFile.close();
 }
 
-//std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, float rating, int year) {
-//    int total_genres = genres_indexes.size();
-//    std::vector <Book> rand_list;
-//    /*Seed for random*/
-//    std::srand(time(NULL));
-
-//    int book_not_done = 10/total_genres;          /*number of Books per genre*/
-
-//    for(int i = 0; i < total_genres; i++) {
-
-//        if(i == total_genres - 1) {
-//            /*Give the last genre all the remaining books*/
-//            book_not_done += 10%total_genres;
-//        }
-
-//        for(int j = 0; j < 20 && book_not_done; j++) {                              /*Generates random indexes in range 20 times*/
-//            int potential_book = (std::rand()%40)+(40*genres_indexes[i]);           /*Generate random int from 0 - 39, and scale it up for the required genre*/
-
-////            int duplicate = this->already_there(potential_book, rand_list);
-////            if(this->list[potential_book].year >= year && this->list[potential_book].rating >= rating &&
-////                    this->in_user_list((potential_book)) && duplicate) {
-//            if(this->list[potential_book].year >= year && this->list[potential_book].rating) {
-//                /*Check if requirements are satisfied*/
-//                rand_list.push_back(this->list[potential_book]);
-//                book_not_done--;
-//            }
-//        }
-
-//        book_not_done = 10/total_genres;            /*Reset value for next book*/
-//    }
-
-//    return rand_list;
-//}
-
 std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, float rating, int year) {
     int total_genres = genres_indexes.size();
     std::vector <Book> rand_list;
@@ -157,7 +118,10 @@ std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, f
         for(int j = 0; j < 20 && book_not_done; j++) {                              /*Generates random indexes in range 20 times*/
             int potential_book = (std::rand()%40)+(40*genres_indexes[i]);           /*Generate random int from 0 - 39, and scale it up for the required genre*/
 
-            if(this->list[potential_book].year >= year && this->list[potential_book].rating >= rating) {
+            int duplicate = this->already_there(potential_book, rand_list);
+            if(this->list[potential_book].year >= year && this->list[potential_book].rating >= rating &&
+                    this->in_user_list((potential_book)) && duplicate) {
+//            if(this->list[potential_book].year >= year && this->list[potential_book].rating) {
                 /*Check if requirements are satisfied*/
                 rand_list.push_back(this->list[potential_book]);
                 book_not_done--;
@@ -170,23 +134,23 @@ std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, f
     return rand_list;
 }
 
-//int Collection::already_there(int idn, std::vector <Book> lst) {
-//    for(int i = 0; i < lst.size(); i++) {
-//        if(idn == lst[i].id) {
-//            return 0;
-//        }
-//    }
-//    return 1;
-//}
+int Collection::already_there(int idn, std::vector <Book> lst) {
+    for(int i = 0; i < lst.size(); i++) {
+        if(idn == lst[i].id) {
+            return 0;
+        }
+    }
+    return 1;
+}
 
-//int Collection::in_user_list(int idn){
-//    for(int i = 0; i < this->user_list.size(); i++) {
-//        if(idn == this->user_list[i]) {
-//            return 0;
-//        }
-//    }
-//    return 1;
-//}
+int Collection::in_user_list(int idn){
+    for(int i = 0; i < this->user_list.size(); i++) {
+        if(idn == this->user_list[i]) {
+            return 0;
+        }
+    }
+    return 1;
+}
 
 void Collection::extra_info(int id)
 {

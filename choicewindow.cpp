@@ -99,14 +99,12 @@ void ChoiceWindow::on_pushButton_clicked()
 
 //    Collection *books=new Collection();
     std::vector <std::string> genres = {"crime", "fiction", "fantasy", "non-fiction", "mystery", "clàssics", "mangá", "sci-fi", "historical", "horror", "thriller", "humor", "suspense", "romance", "cookbook"};
-//    this->books->read_file();
-//    this->books->read_user_file("userData.dat");
 
-//    if(this->genres_chosen.size() == 0) {
-//            for(int i = 0; i < 14; i++) {
-//                this->genres_chosen.push_back((i));
-//       }
-//    }
+    if(this->genres_chosen.size() == 0) {
+            for(int i = 0; i < 15; i++) {
+                this->genres_chosen.push_back((i));
+       }
+    }
 
     std::vector <Book> rand_gen = this->books->get_rand_list(this->genres_chosen, this->rating, this->year);
 
@@ -136,62 +134,67 @@ void ChoiceWindow::on_genre_ficiton_clicked()
     this->genres_chosen.push_back(1);
 }
 
-void ChoiceWindow::on_genre_non_fiction_clicked()
+void ChoiceWindow::on_genre_fantasy_clicked()
 {
     this->genres_chosen.push_back(2);
 }
 
-void ChoiceWindow::on_genre_mystery_clicked()
+void ChoiceWindow::on_genre_non_fiction_clicked()
 {
     this->genres_chosen.push_back(3);
 }
 
-void ChoiceWindow::on_genre_classic_clicked()
+void ChoiceWindow::on_genre_mystery_clicked()
 {
     this->genres_chosen.push_back(4);
 }
 
-void ChoiceWindow::on_genre_manga_clicked()
+void ChoiceWindow::on_genre_classic_clicked()
 {
     this->genres_chosen.push_back(5);
 }
 
-void ChoiceWindow::on_genre_sci_fi_clicked()
+void ChoiceWindow::on_genre_manga_clicked()
 {
     this->genres_chosen.push_back(6);
 }
 
-void ChoiceWindow::on_genre_historical_clicked()
+void ChoiceWindow::on_genre_sci_fi_clicked()
 {
     this->genres_chosen.push_back(7);
 }
 
-void ChoiceWindow::on_genre_horror_clicked()
+void ChoiceWindow::on_genre_historical_clicked()
 {
     this->genres_chosen.push_back(8);
 }
 
-void ChoiceWindow::on_genre_romance_clicked()
+void ChoiceWindow::on_genre_horror_clicked()
 {
     this->genres_chosen.push_back(9);
 }
 
-void ChoiceWindow::on_genre_thriller_clicked()
+void ChoiceWindow::on_genre_romance_clicked()
 {
     this->genres_chosen.push_back(10);
 }
 
-void ChoiceWindow::on_genre_cookbook_clicked()
+void ChoiceWindow::on_genre_thriller_clicked()
 {
     this->genres_chosen.push_back(11);
 }
 
-void ChoiceWindow::on_genre_suspense_clicked()
+void ChoiceWindow::on_genre_cookbook_clicked()
 {
     this->genres_chosen.push_back(12);
 }
 
-void ChoiceWindow::on_genre_humor_clicked()
+void ChoiceWindow::on_genre_suspense_clicked()
 {
     this->genres_chosen.push_back(13);
+}
+
+void ChoiceWindow::on_genre_humor_clicked()
+{
+    this->genres_chosen.push_back(14);
 }
