@@ -41,7 +41,6 @@ public:
 
         /*User List Functions*/
         int in_user_list(int idn);
-        void buy_book(int idn);
         void read_user_file(std::string filename);
         void delete_book(int idn);
         void output_file(std::string filename);
@@ -51,6 +50,7 @@ public:
 public slots:
         void extra_info(int id);
         void add_book(int idn);
+        void buy_book(int idn);
 };
 
 class RandList : public QMainWindow

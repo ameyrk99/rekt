@@ -2,6 +2,7 @@
 #include "randListWindow.h"
 #include "choicewindow.h"
 #include <iostream>
+#include <vector>
 #include <sstream>
 #include <string>
 
@@ -254,13 +255,6 @@ void ChoiceWindow::on_button_userlist_clicked()
     QPushButton *button_info=new QPushButton("Info");
     QObject::connect(button_info, SIGNAL(clicked()), this, SLOT(on_info_button_clicked()));
 
-//    QSignalMapper *mapper=new QSignalMapper();
-
-//    QPushButton *button_info=new QPushButton("Delete Book");
-//    QObject::connect(button_info, SIGNAL(clicked()), mapper, SLOT(map()));
-//    mapper->setMapping(button_info, userListView->currentIndex().row());
-//    QObject::connect(mapper, SIGNAL(mapped(int)), SLOT(on_info_button_clicked(int)));
-
     QPushButton *go_back=new QPushButton("  Back ");
     QObject::connect(go_back, SIGNAL(clicked()), window, SLOT(close()));
 
@@ -276,17 +270,16 @@ void ChoiceWindow::on_button_userlist_clicked()
 
 void ChoiceWindow::on_deleteButton_clicked()
 {
-    model->removeRows(userListView->currentIndex().row(), 1);
-    Book b = books->get_book(books->user_list[userListView->currentIndex().row()]);
-    books->delete_book(b.id);
-//    std::cout<<userListView->currentIndex().row()<<std::endl;
+    int row = userListView->currentIndex().row();
+    model->removeRows(row, 1);
+    Book b = books->get_book(books->user_list[row]);
+    this->books->user_list.erase(this->books->user_list.begin() + row);
+    this->books->output_file("../rekt/userData.dat");
 }
 
 void::ChoiceWindow::on_info_button_clicked() {
-//    Book b = books->get_book(books->user_list[userListView->currentIndex().row()]);
-//    int id = b.id;
-
-    int id = 200;
+    Book b = books->get_book(books->user_list[userListView->currentIndex().row()]);
+    int id = b.id;
 
     QWidget* window=new QWidget;
     QLabel* title=new QLabel(QString::fromStdString(books->get_book(id).title));

@@ -275,7 +275,7 @@ void Collection::add_book(int idn)
 
 void Collection::delete_book(int idn)
 {
-    std::remove(this->user_list.begin(), this->user_list.end(), idn);
+//    this->user_list.erase(user_list.begin() + 1);
     this->output_file("../rekt/userData.dat");
     return;
 }
