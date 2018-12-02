@@ -12,6 +12,7 @@ ChoiceWindow::ChoiceWindow(QWidget *parent) :
     ui->setupUi(this);
     connect_Signals();
     connect_rating_Signals();
+    ChoiceWindow::setWindowTitle("RecommUi");
     this->books = new Collection();
     this->books->read_file();
     this->books->read_user_file("userData.dat");
@@ -101,11 +102,11 @@ void ChoiceWindow::on_pushButton_clicked()
 //    this->books->read_file();
 //    this->books->read_user_file("userData.dat");
 
-    if(this->genres_chosen.size() == 0) {
-            for(int i = 0; i < 14; i++) {
-                this->genres_chosen.push_back((i));
-       }
-    }
+//    if(this->genres_chosen.size() == 0) {
+//            for(int i = 0; i < 14; i++) {
+//                this->genres_chosen.push_back((i));
+//       }
+//    }
 
     std::vector <Book> rand_gen = this->books->get_rand_list(this->genres_chosen, this->rating, this->year);
 

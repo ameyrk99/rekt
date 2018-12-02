@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>969</width>
-    <height>388</height>
+    <height>463</height>
    </rect>
   </property>
   <property name="palette">
@@ -52,6 +52,36 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item alignment="Qt::AlignHCenter">
+     <widget class="QLabel" name="label">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Fira Mono</family>
+        <pointsize>25</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+        <underline>false</underline>
+        <strikeout>false</strikeout>
+        <kerning>true</kerning>
+       </font>
+      </property>
+      <property name="mouseTracking">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>RecommUi</string>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -465,6 +495,12 @@
      <height>26</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuRecommUi">
+    <property name="title">
+     <string>&amp;RecommUi</string>
+    </property>
+   </widget>
+   <addaction name="menuRecommUi"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">

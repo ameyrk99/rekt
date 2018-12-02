@@ -105,6 +105,40 @@ void Collection::read_file()
     inFile.close();
 }
 
+//std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, float rating, int year) {
+//    int total_genres = genres_indexes.size();
+//    std::vector <Book> rand_list;
+//    /*Seed for random*/
+//    std::srand(time(NULL));
+
+//    int book_not_done = 10/total_genres;          /*number of Books per genre*/
+
+//    for(int i = 0; i < total_genres; i++) {
+
+//        if(i == total_genres - 1) {
+//            /*Give the last genre all the remaining books*/
+//            book_not_done += 10%total_genres;
+//        }
+
+//        for(int j = 0; j < 20 && book_not_done; j++) {                              /*Generates random indexes in range 20 times*/
+//            int potential_book = (std::rand()%40)+(40*genres_indexes[i]);           /*Generate random int from 0 - 39, and scale it up for the required genre*/
+
+////            int duplicate = this->already_there(potential_book, rand_list);
+////            if(this->list[potential_book].year >= year && this->list[potential_book].rating >= rating &&
+////                    this->in_user_list((potential_book)) && duplicate) {
+//            if(this->list[potential_book].year >= year && this->list[potential_book].rating) {
+//                /*Check if requirements are satisfied*/
+//                rand_list.push_back(this->list[potential_book]);
+//                book_not_done--;
+//            }
+//        }
+
+//        book_not_done = 10/total_genres;            /*Reset value for next book*/
+//    }
+
+//    return rand_list;
+//}
+
 std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, float rating, int year) {
     int total_genres = genres_indexes.size();
     std::vector <Book> rand_list;
@@ -123,9 +157,7 @@ std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, f
         for(int j = 0; j < 20 && book_not_done; j++) {                              /*Generates random indexes in range 20 times*/
             int potential_book = (std::rand()%40)+(40*genres_indexes[i]);           /*Generate random int from 0 - 39, and scale it up for the required genre*/
 
-            int duplicate = this->already_there(potential_book, rand_list);
-            if(this->list[potential_book].year >= year && this->list[potential_book].rating >= rating &&
-                    this->in_user_list((potential_book)) && duplicate) {
+            if(this->list[potential_book].year >= year && this->list[potential_book].rating >= rating) {
                 /*Check if requirements are satisfied*/
                 rand_list.push_back(this->list[potential_book]);
                 book_not_done--;
@@ -138,23 +170,23 @@ std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, f
     return rand_list;
 }
 
-int Collection::already_there(int idn, std::vector <Book> lst) {
-    for(int i = 0; i < lst.size(); i++) {
-        if(idn == lst[i].id) {
-            return 0;
-        }
-    }
-    return 1;
-}
+//int Collection::already_there(int idn, std::vector <Book> lst) {
+//    for(int i = 0; i < lst.size(); i++) {
+//        if(idn == lst[i].id) {
+//            return 0;
+//        }
+//    }
+//    return 1;
+//}
 
-int Collection::in_user_list(int idn){
-    for(int i = 0; i < this->user_list.size(); i++) {
-        if(idn == this->user_list[i]) {
-            return 0;
-        }
-    }
-    return 1;
-}
+//int Collection::in_user_list(int idn){
+//    for(int i = 0; i < this->user_list.size(); i++) {
+//        if(idn == this->user_list[i]) {
+//            return 0;
+//        }
+//    }
+//    return 1;
+//}
 
 void Collection::extra_info(int id)
 {
@@ -163,6 +195,12 @@ void Collection::extra_info(int id)
     QLabel* title=new QLabel(QString::fromStdString(get_book(id).title));
     QLabel* author=new QLabel(QString::fromStdString(get_book(id).author));
     QLabel* about=new QLabel(QString::fromStdString(get_book(id).about));
+    QLabel* link=new QLabel("<a href=\""+QString::fromStdString(get_book(id).link)+"\">Buy Book Online</a>");
+    link->setTextFormat(Qt::RichText);
+    link->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    link->setOpenExternalLinks(true);
+    QLabel* year=new QLabel(QString::fromStdString(std::to_string(get_book(id).year)));
+    QLabel* rating=new QLabel(QString::fromStdString(std::to_string(get_book(id).rating)));
     QString num_jpg=QString::number(id);
     QPixmap image("images/book_"+num_jpg+".jpg");
     QLabel* picture=new QLabel();
@@ -185,6 +223,9 @@ void Collection::extra_info(int id)
     QVBoxLayout* all_info=new QVBoxLayout;
     top_info->addWidget(title);
     top_info->addWidget(author);
+    top_info->addWidget(year);
+    top_info->addWidget(rating);
+    top_info->addWidget(link);
     bottom_info->addWidget(about);
     bottom_info->addWidget(picture);
     buttons->addWidget(addtolist);
@@ -267,6 +308,7 @@ void Collection::output_file(std::string filename)
 void print_books(std::vector <Book> rand_list, std::vector <std::string> genres, Collection *books)
 {
     QWidget* window=new QWidget;
+    window->setWindowTitle("RecommUi");
     QVBoxLayout* compile=new QVBoxLayout;
     for(int i=0;i<rand_list.size()-1;i++)
     {
