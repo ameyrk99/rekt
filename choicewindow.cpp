@@ -2,6 +2,7 @@
 #include "randListWindow.h"
 #include "choicewindow.h"
 #include <iostream>
+#include <sstream>
 #include <string>
 
 ChoiceWindow::ChoiceWindow(QWidget *parent) :
@@ -248,13 +249,24 @@ void ChoiceWindow::on_button_userlist_clicked()
     userListView->setEditTriggers(QAbstractItemView::AnyKeyPressed | QAbstractItemView::DoubleClicked);
 
     QPushButton *delete_book=new QPushButton("Remove Book");
-    QObject::connect(delete_book, SIGNAL(clicked()), window, SLOT(on_deleteButton_clicked()));
+    QObject::connect(delete_book, SIGNAL(clicked()), this, SLOT(on_deleteButton_clicked()));
+
+    QPushButton *button_info=new QPushButton("Info");
+    QObject::connect(button_info, SIGNAL(clicked()), this, SLOT(on_info_button_clicked()));
+
+//    QSignalMapper *mapper=new QSignalMapper();
+
+//    QPushButton *button_info=new QPushButton("Delete Book");
+//    QObject::connect(button_info, SIGNAL(clicked()), mapper, SLOT(map()));
+//    mapper->setMapping(button_info, userListView->currentIndex().row());
+//    QObject::connect(mapper, SIGNAL(mapped(int)), SLOT(on_info_button_clicked(int)));
 
     QPushButton *go_back=new QPushButton("  Back ");
     QObject::connect(go_back, SIGNAL(clicked()), window, SLOT(close()));
 
 
     for_buttons->addWidget(delete_book);
+    for_buttons->addWidget(button_info);
     for_buttons->addWidget(go_back);
     all_info->addWidget(userListView);
     all_info->addLayout(for_buttons);
@@ -262,9 +274,81 @@ void ChoiceWindow::on_button_userlist_clicked()
     window->show();
 }
 
-void ChoiceWindow::on_deleteButton_clicked(int idn)
+void ChoiceWindow::on_deleteButton_clicked()
 {
-    model->removeRows(idn, 1);
-    books->delete_book(idn);
+    model->removeRows(userListView->currentIndex().row(), 1);
+    Book b = books->get_book(books->user_list[userListView->currentIndex().row()]);
+    books->delete_book(b.id);
 //    std::cout<<userListView->currentIndex().row()<<std::endl;
+}
+
+void::ChoiceWindow::on_info_button_clicked() {
+//    Book b = books->get_book(books->user_list[userListView->currentIndex().row()]);
+//    int id = b.id;
+
+    int id = 200;
+
+    QWidget* window=new QWidget;
+    QLabel* title=new QLabel(QString::fromStdString(books->get_book(id).title));
+    QFont titleFont("", 16, QFont::Bold);
+    title->setFont(titleFont);
+    title->setWordWrap(true);
+    QLabel* author=new QLabel(QString::fromStdString(books->get_book(id).author));
+    QFont authorFont("", 14);
+    author->setFont(authorFont);
+    QLabel* about=new QLabel(QString::fromStdString(books->get_book(id).about));
+    QLabel* year=new QLabel(QString::fromStdString(std::to_string(books->get_book(id).year)));
+
+    std::ostringstream out;
+    out.precision(2);
+    out << std::fixed << books->get_book(id).rating;
+    QLabel* rating=new QLabel(QString::fromStdString(out.str()));
+    QString num_jpg=QString::number(id);
+    QPixmap image("../rekt/images/book_"+num_jpg+".jpg");
+    QLabel* picture=new QLabel();
+    picture->setPixmap(image);
+    about->setWordWrap(true);
+
+    QPushButton *exit=new QPushButton("  Exit");
+    QObject::connect(exit, SIGNAL(clicked()), window, SLOT(close()));
+
+    QSignalMapper *mapper2=new QSignalMapper();
+    QPushButton *buybutton=new QPushButton("  Buy Book");
+    QObject::connect(buybutton, SIGNAL(clicked()), mapper2, SLOT(map()));
+    mapper2->setMapping(buybutton, id);
+    QObject::connect(mapper2, SIGNAL(mapped(int)), SLOT(buy_book(int)));
+
+
+    //organizes info
+    QVBoxLayout *all_info = new QVBoxLayout;
+    QHBoxLayout *button_bar = new QHBoxLayout;
+    QHBoxLayout *info_tab = new QHBoxLayout;
+    QVBoxLayout *left_panel = new QVBoxLayout;
+    QVBoxLayout *right_panel = new QVBoxLayout;
+    QVBoxLayout* top_info=new QVBoxLayout;
+    QHBoxLayout* bottom_info=new QHBoxLayout;
+    top_info->addWidget(title);
+    top_info->addWidget(author);
+    top_info->addWidget(year);
+    top_info->addWidget(rating);
+    bottom_info->addWidget(about);
+
+    left_panel->addLayout(top_info);
+    left_panel->addLayout(bottom_info);
+
+    left_panel->addSpacing(300);
+
+    right_panel->addWidget(picture);
+
+    info_tab->addLayout(left_panel);
+    info_tab->addLayout(right_panel);
+
+    button_bar->addWidget(buybutton);
+    button_bar->addWidget(exit);
+
+    all_info->addLayout(info_tab);
+    all_info->addLayout(button_bar);
+
+    window->setLayout(all_info);
+    window->show();
 }

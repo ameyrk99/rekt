@@ -38,7 +38,10 @@ private:
     void connect_rating_Signals(); /*connects how many stars the user wants to find a book with to a dial widget*/
     void disconnect_rating_Signals(); /*disconnects how many stars the user wants to find a book with to a dial widget*/
     void read_list(); /*stores a list of all things the user wants to read*/
-    void on_deleteButton_clicked(int idn); /*deletes a book from the user list*/
+
+public slots:
+    void on_deleteButton_clicked(); /*deletes a book from the user list*/
+    void on_info_button_clicked();
 
 private slots: /*adds a new slot that connects the two values into one slot*/
     void new_Value_Changed(int newValue);
