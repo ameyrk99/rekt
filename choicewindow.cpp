@@ -15,6 +15,10 @@ ChoiceWindow::ChoiceWindow(QWidget *parent) :
     this->books = new Collection();
     this->books->read_file();
     this->books->read_user_file("../rekt/userData.dat");
+    ui->spinBox_year->setValue(0);
+    ui->slider_year->setValue(0);
+    ui->spinBox_rating->setValue(0);
+    ui->dial_rating->setValue(0);
 }
 
 ChoiceWindow::~ChoiceWindow()
@@ -89,29 +93,6 @@ void ChoiceWindow::new_Rating_Changed(int newRating)
        ui->dial_rating->setValue(newRating); /*sets the value of the slider to the user designated value*/
 
        connect_rating_Signals();
-}
-
-void ChoiceWindow::on_pushButton_clicked()
-{
-    this->year = ui->slider_year->value();
-    this->rating = ui->dial_rating->value();
-
-    std::vector <std::string> genres = {"crime", "fiction", "fantasy", "non-fiction", "mystery", "clàssics", "mangá", "sci-fi", "historical", "horror", "thriller", "humor", "suspense", "romance", "cookbook"};
-
-    if(this->genres_chosen.size() == 0) {
-            for(int i = 0; i < 15; i++) {
-                this->genres_chosen.push_back((i));
-       }
-    }
-
-    std::vector <Book> rand_gen = this->books->get_rand_list(this->genres_chosen, this->rating, this->year);
-
-    this->books->display_books(rand_gen, genres, this->books);
-}
-
-void ChoiceWindow::on_pushButton_2_clicked()
-{
-    this->close();
 }
 
 void ChoiceWindow::on_genre_crime_clicked()
@@ -189,12 +170,61 @@ void ChoiceWindow::on_genre_cookbook_clicked()
     this->genres_chosen.push_back(14);
 }
 
+void ChoiceWindow::on_button_find_clicked()
+{
+    this->year = ui->slider_year->value();
+    this->rating = ui->dial_rating->value();
+
+    std::vector <std::string> genres = {"crime", "fiction", "fantasy", "non-fiction", "mystery", "clàssics", "mangá", "sci-fi", "historical", "horror", "thriller", "humor", "suspense", "romance", "cookbook"};
+
+    if(this->genres_chosen.size() == 0) {
+            for(int i = 0; i < 15; i++) {
+                this->genres_chosen.push_back((i));
+       }
+    }
+
+    std::vector <Book> rand_gen = this->books->get_rand_list(this->genres_chosen, this->rating, this->year);
+
+    this->books->display_books(rand_gen, genres, this->books);
+}
+
+void ChoiceWindow::on_button_refresh_clicked()
+{
+    this->genres_chosen.clear();
+    ui->genre_crime->setChecked(false);
+    ui->genre_fantasy->setChecked(false);
+    ui->genre_ficiton->setChecked(false);
+    ui->genre_mystery->setChecked(false);
+    ui->genre_non_fiction->setChecked(false);
+    ui->genre_classic->setChecked(false);
+    ui->genre_historical->setChecked(false);
+    ui->genre_horror->setChecked(false);
+    ui->genre_manga->setChecked(false);
+    ui->genre_sci_fi->setChecked(false);
+    ui->genre_cookbook->setChecked(false);
+    ui->genre_humor->setChecked(false);
+    ui->genre_romance->setChecked(false);
+    ui->genre_suspense->setChecked(false);
+    ui->genre_thriller->setChecked(false);
+
+    ui->spinBox_year->setValue(0);
+    ui->slider_year->setValue(0);
+    ui->spinBox_rating->setValue(0);
+    ui->dial_rating->setValue(0);
+}
+
+void ChoiceWindow::on_button_exit_clicked()
+{
+    this->close();
+}
+
 void ChoiceWindow::on_button_userlist_clicked()
 {
     books_added = books->get_list();
     id_nums = books->get_user_list();
 
     QWidget* window=new QWidget;
+    window->resize(600, 500);
     window->setWindowTitle("RecommUi: To Read List");
     QVBoxLayout* all_info=new QVBoxLayout;
     QHBoxLayout* for_buttons=new QHBoxLayout;
@@ -217,16 +247,10 @@ void ChoiceWindow::on_button_userlist_clicked()
     userListView->setModel(model);
     userListView->setEditTriggers(QAbstractItemView::AnyKeyPressed | QAbstractItemView::DoubleClicked);
 
-//    QPushButton *delete_book=new QPushButton("Remove Book");
-//    QObject::connect(delete_book, SIGNAL(clicked()), window, SLOT(on_deleteButton_clicked()));
+    QPushButton *delete_book=new QPushButton("Remove Book");
+    QObject::connect(delete_book, SIGNAL(clicked()), window, SLOT(on_deleteButton_clicked()));
 
-    QSignalMapper *mapper=new QSignalMapper();
-    QPushButton *delete_book=new QPushButton(" Delete Book");
-    QObject::connect(delete_book, SIGNAL(clicked()), mapper, SLOT(map()));
-    mapper->setMapping(delete_book, userListView->currentIndex().row());
-    QObject::connect(mapper, SIGNAL(mapped(int)), SLOT(buy_book(int)));
-
-    QPushButton *go_back=new QPushButton("Go Back");
+    QPushButton *go_back=new QPushButton("  Back ");
     QObject::connect(go_back, SIGNAL(clicked()), window, SLOT(close()));
 
 
@@ -243,9 +267,4 @@ void ChoiceWindow::on_deleteButton_clicked(int idn)
     model->removeRows(idn, 1);
     books->delete_book(idn);
 //    std::cout<<userListView->currentIndex().row()<<std::endl;
-}
-
-void ChoiceWindow::on_pushButton_3_clicked()
-{
-    this->genres_chosen.clear();
 }

@@ -100,11 +100,6 @@ void Collection::read_file()
         this->list.push_back(b);
     }
 
-//    user_list.push_back(100);
-//    user_list.push_back(87);
-//    user_list.push_back(0);
-//    user_list.push_back(499);
-
     inFile.close();
 }
 
@@ -158,9 +153,31 @@ int Collection::in_user_list(int idn){
     return 1;
 }
 
+void Collection::display_books(std::vector <Book> rand_list, std::vector <std::string> genres, Collection *books)
+{
+    QWidget *display_window =new QWidget;
+    display_window->setWindowTitle("Try These");
+    QVBoxLayout* compile=new QVBoxLayout;
+    for(int i=0;i<rand_list.size()-1;i++)
+    {
+        QSignalMapper *mapper=new QSignalMapper();
+        QPushButton *more_info=new QPushButton(QString::fromStdString(rand_list[i].title));
+        compile->addWidget(more_info);
+        QObject::connect(more_info, SIGNAL(clicked()), mapper, SLOT(map()));
+        mapper->setMapping(more_info, rand_list[i].id);
+        QObject::connect(mapper, SIGNAL(mapped(int)), books, SLOT(extra_info(int)));
+    }
+
+    QPushButton *exit=new QPushButton("  Back ");
+    compile->addWidget(exit);
+    QObject::connect(exit, SIGNAL(clicked()), display_window, SLOT(close()));
+
+    display_window->setLayout(compile);
+    display_window->show();
+}
+
 void Collection::extra_info(int id)
 {
-    //gets info
     QWidget* window=new QWidget;
     QLabel* title=new QLabel(QString::fromStdString(get_book(id).title));
     QFont titleFont("", 16, QFont::Bold);
@@ -186,13 +203,13 @@ void Collection::extra_info(int id)
     QObject::connect(exit, SIGNAL(clicked()), window, SLOT(close()));
 
     QSignalMapper *mapper1 = new QSignalMapper();
-    QPushButton *to_read = new QPushButton("Add to Read List");
+    QPushButton *to_read = new QPushButton("  Add to Read List");
     QObject::connect(to_read, SIGNAL(clicked()), mapper1, SLOT(map()));
     mapper1->setMapping(to_read, id);
     QObject::connect(mapper1, SIGNAL(mapped(int)), SLOT(add_book(int)));
 
     QSignalMapper *mapper2=new QSignalMapper();
-    QPushButton *buybutton=new QPushButton("  Buy Book");
+    QPushButton *buybutton=new QPushButton("  Buy Book");
     QObject::connect(buybutton, SIGNAL(clicked()), mapper2, SLOT(map()));
     mapper2->setMapping(buybutton, id);
     QObject::connect(mapper2, SIGNAL(mapped(int)), SLOT(buy_book(int)));
@@ -254,29 +271,6 @@ void Collection::add_book(int idn)
     window->setLayout(notify);
     window->show();
    this->output_file("../rekt/userData.dat");
-}
-
-void Collection::display_books(std::vector <Book> rand_list, std::vector <std::string> genres, Collection *books)
-{
-    QWidget *display_window =new QWidget;
-    display_window->setWindowTitle("RecommUi");
-    QVBoxLayout* compile=new QVBoxLayout;
-    for(int i=0;i<rand_list.size()-1;i++)
-    {
-        QSignalMapper *mapper=new QSignalMapper();
-        QPushButton *more_info=new QPushButton(QString::fromStdString(rand_list[i].title));
-        compile->addWidget(more_info);
-        QObject::connect(more_info, SIGNAL(clicked()), mapper, SLOT(map()));
-        mapper->setMapping(more_info, rand_list[i].id);
-        QObject::connect(mapper, SIGNAL(mapped(int)), books, SLOT(extra_info(int)));
-    }
-
-    QPushButton *exit=new QPushButton("Exit");
-    compile->addWidget(exit);
-    QObject::connect(exit, SIGNAL(clicked()), display_window, SLOT(close()));
-
-    display_window->setLayout(compile);
-    display_window->show();
 }
 
 void Collection::delete_book(int idn)

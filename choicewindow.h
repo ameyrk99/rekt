@@ -43,6 +43,7 @@ private:
 private slots: /*adds a new slot that connects the two values into one slot*/
     void new_Value_Changed(int newValue);
     void new_Rating_Changed(int newRating);
+
     void on_genre_crime_clicked();
     void on_genre_ficiton_clicked();
     void on_genre_non_fiction_clicked();
@@ -57,10 +58,12 @@ private slots: /*adds a new slot that connects the two values into one slot*/
     void on_genre_cookbook_clicked();
     void on_genre_suspense_clicked();
     void on_genre_humor_clicked();
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
     void on_genre_fantasy_clicked();
+
     void on_button_userlist_clicked();
+    void on_button_find_clicked();
+    void on_button_exit_clicked();
+    void on_button_refresh_clicked();
 };
 
-#endif // CHOICEWINDOW_H
+#endif

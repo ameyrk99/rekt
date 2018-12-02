@@ -460,7 +460,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="button_find">
           <property name="maximumSize">
            <size>
             <width>150</width>
@@ -468,7 +468,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Find</string>
+           <string> Find</string>
           </property>
          </widget>
         </item>
@@ -481,12 +481,12 @@
            </size>
           </property>
           <property name="text">
-           <string>Read Later</string>
+           <string> Read Later</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_3">
+         <widget class="QPushButton" name="button_refresh">
           <property name="maximumSize">
            <size>
             <width>150</width>
@@ -494,12 +494,12 @@
            </size>
           </property>
           <property name="text">
-           <string>Refresh</string>
+           <string> Refresh</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="button_exit">
           <property name="maximumSize">
            <size>
             <width>150</width>
@@ -507,7 +507,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Exit</string>
+           <string> Exit</string>
           </property>
          </widget>
         </item>
