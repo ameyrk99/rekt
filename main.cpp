@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
      * Splash Screen ----------------------------------------------------------------------------------------------------------------------------
      */
 
-    QMovie *movie = new QMovie("../rekt/book.gif");
+    QMovie *movie = new QMovie("book.gif");
     QLabel *processLabel = new QLabel(nullptr);
 
     processLabel->resize(400,400);  // to make sure its large enough

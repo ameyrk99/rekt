@@ -44,13 +44,13 @@ Book Collection::get_book(int n)
 void Collection::read_file()
 {
     /*Reads file*/
-    std::string filename = "../rekt/booksData.csv";
+    std::string filename = "booksData.csv";
     std::ifstream inFile;
     inFile.open(filename);
 
     if(!inFile)
     {
-        std::cout<<"Unable to open file.\n";
+        std::cout<<"Unable to open file booksData.csv.\n";
         exit(1);
     }
 
@@ -194,7 +194,7 @@ void Collection::extra_info(int id)
     out << std::fixed << get_book(id).rating;
     QLabel* rating=new QLabel(QString::fromStdString(out.str()));
     QString num_jpg=QString::number(id);
-    QPixmap image("../rekt/images/book_"+num_jpg+".jpg");
+    QPixmap image("images/book_"+num_jpg+".jpg");
     QLabel* picture=new QLabel();
     picture->setPixmap(image);
     about->setWordWrap(true);
@@ -270,13 +270,13 @@ void Collection::add_book(int idn)
     notify->addWidget(okay);
     window->setLayout(notify);
     window->show();
-   this->output_file("../rekt/userData.dat");
+   this->output_file("userData.dat");
 }
 
 void Collection::delete_book(int idn)
 {
 //    this->user_list.erase(user_list.begin() + 1);
-    this->output_file("../rekt/userData.dat");
+    this->output_file("userData.dat");
     return;
 }
 
@@ -288,7 +288,7 @@ void Collection::read_user_file(std::string filename)
 
     if(!inFile)
     {
-        std::cout<<"Unable to open file.\n";
+        std::cout<<"Unable to open file userData.dat.\n";
         exit(1);
     }
 

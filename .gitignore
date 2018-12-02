@@ -1,0 +1,7 @@
+.qmake.stash
+Books.pro.user*
+Makefile
+Recommui
+*.o
+moc_*
+ui_*

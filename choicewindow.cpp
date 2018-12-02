@@ -16,7 +16,7 @@ ChoiceWindow::ChoiceWindow(QWidget *parent) :
     ChoiceWindow::setWindowTitle("RecommUi");
     this->books = new Collection();
     this->books->read_file();
-    this->books->read_user_file("../rekt/userData.dat");
+    this->books->read_user_file("userData.dat");
     ui->spinBox_year->setValue(0);
     ui->slider_year->setValue(0);
     ui->spinBox_rating->setValue(0);
@@ -249,10 +249,10 @@ void ChoiceWindow::on_button_userlist_clicked()
     userListView->setModel(model);
     userListView->setEditTriggers(QAbstractItemView::AnyKeyPressed | QAbstractItemView::DoubleClicked);
 
-    QPushButton *delete_book=new QPushButton("Remove Book");
+    QPushButton *delete_book=new QPushButton("  Remove Book");
     QObject::connect(delete_book, SIGNAL(clicked()), this, SLOT(on_deleteButton_clicked()));
 
-    QPushButton *button_info=new QPushButton("Info");
+    QPushButton *button_info=new QPushButton("  Info");
     QObject::connect(button_info, SIGNAL(clicked()), this, SLOT(on_info_button_clicked()));
 
     QPushButton *go_back=new QPushButton("  Back ");
@@ -274,7 +274,7 @@ void ChoiceWindow::on_deleteButton_clicked()
     model->removeRows(row, 1);
     Book b = books->get_book(books->user_list[row]);
     this->books->user_list.erase(this->books->user_list.begin() + row);
-    this->books->output_file("../rekt/userData.dat");
+    this->books->output_file("userData.dat");
 }
 
 void::ChoiceWindow::on_info_button_clicked() {
@@ -297,7 +297,7 @@ void::ChoiceWindow::on_info_button_clicked() {
     out << std::fixed << books->get_book(id).rating;
     QLabel* rating=new QLabel(QString::fromStdString(out.str()));
     QString num_jpg=QString::number(id);
-    QPixmap image("../rekt/images/book_"+num_jpg+".jpg");
+    QPixmap image("images/book_"+num_jpg+".jpg");
     QLabel* picture=new QLabel();
     picture->setPixmap(image);
     about->setWordWrap(true);
@@ -309,7 +309,7 @@ void::ChoiceWindow::on_info_button_clicked() {
     QPushButton *buybutton=new QPushButton("  Buy Book");
     QObject::connect(buybutton, SIGNAL(clicked()), mapper2, SLOT(map()));
     mapper2->setMapping(buybutton, id);
-    QObject::connect(mapper2, SIGNAL(mapped(int)), SLOT(buy_book(int)));
+    QObject::connect(mapper2, SIGNAL(mapped(int)), SLOT(user_list_buy_book(int)));
 
 
     //organizes info
@@ -344,4 +344,9 @@ void::ChoiceWindow::on_info_button_clicked() {
 
     window->setLayout(all_info);
     window->show();
+}
+
+void ChoiceWindow::user_list_buy_book(int idn) {
+    QString link = QString::fromStdString(this->books->get_book(idn).link);
+    QDesktopServices::openUrl(QUrl(link));
 }

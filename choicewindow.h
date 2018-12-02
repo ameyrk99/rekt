@@ -42,6 +42,7 @@ private:
 public slots:
     void on_deleteButton_clicked(); /*deletes a book from the user list*/
     void on_info_button_clicked();
+    void user_list_buy_book(int idn);
 
 private slots: /*adds a new slot that connects the two values into one slot*/
     void new_Value_Changed(int newValue);
