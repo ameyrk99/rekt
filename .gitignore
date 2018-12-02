@@ -5,3 +5,4 @@ Recommui
 *.o
 moc_*
 ui_*
+.directory
