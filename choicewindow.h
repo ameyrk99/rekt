@@ -53,7 +53,6 @@ private slots: /*adds a new slot that connects the two values into one slot*/
     void on_genre_humor_clicked();
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
-    void on_pushButton_3_clicked();
     void on_genre_fantasy_clicked();
 };
 

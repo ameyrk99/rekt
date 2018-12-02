@@ -27,18 +27,15 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     randListWindow.cpp \
-    choicewindow.cpp \
-    userwindow.cpp
+    choicewindow.cpp
 
 HEADERS += \
     randListWindow.h \
-    choicewindow.h \
-    userwindow.h
+    choicewindow.h
 
 FORMS += \
     choicewindow.ui \
-    randlistwindow.ui \
-    userwindow.ui
+    randlistwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

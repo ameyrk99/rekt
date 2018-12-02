@@ -1,4 +1,3 @@
-#include "userwindow.h"
 #include "ui_choicewindow.h"
 #include "randListWindow.h"
 #include "choicewindow.h"
@@ -15,7 +14,6 @@ ChoiceWindow::ChoiceWindow(QWidget *parent) :
     ChoiceWindow::setWindowTitle("RecommUi");
     this->books = new Collection();
     this->books->read_file();
-    this->books->read_user_file("userData.dat");
 }
 
 ChoiceWindow::~ChoiceWindow()
@@ -97,7 +95,6 @@ void ChoiceWindow::on_pushButton_clicked()
     this->year = ui->slider_year->value();
     this->rating = ui->dial_rating->value();
 
-//    Collection *books=new Collection();
     std::vector <std::string> genres = {"crime", "fiction", "fantasy", "non-fiction", "mystery", "clàssics", "mangá", "sci-fi", "historical", "horror", "thriller", "humor", "suspense", "romance", "cookbook"};
 
     if(this->genres_chosen.size() == 0) {
@@ -109,14 +106,6 @@ void ChoiceWindow::on_pushButton_clicked()
     std::vector <Book> rand_gen = this->books->get_rand_list(this->genres_chosen, this->rating, this->year);
 
     print_books(rand_gen, genres, this->books);
-
-    this->books->output_file("userData.dat");
-}
-
-void ChoiceWindow::on_pushButton_3_clicked()
-{
-    UserWindow u(books, this);
-    u.show();
 }
 
 void ChoiceWindow::on_pushButton_2_clicked()

@@ -446,7 +446,7 @@
              <number>1</number>
             </property>
             <property name="maximum">
-             <number>5</number>
+             <number>4</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -469,19 +469,6 @@
           </property>
           <property name="text">
            <string>Find</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_3">
-          <property name="maximumSize">
-           <size>
-            <width>150</width>
-            <height>50</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>My List</string>
           </property>
          </widget>
         </item>
@@ -510,7 +497,7 @@
      <x>0</x>
      <y>0</y>
      <width>970</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuRecommUi">
