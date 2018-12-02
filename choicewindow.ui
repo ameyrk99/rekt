@@ -64,7 +64,13 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>28</pointsize>
+          <family>Fira Mono</family>
+          <pointsize>25</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+          <underline>false</underline>
+          <strikeout>false</strikeout>
+          <kerning>true</kerning>
          </font>
         </property>
         <property name="mouseTracking">
@@ -454,7 +460,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="button_find">
           <property name="maximumSize">
            <size>
             <width>150</width>
@@ -467,7 +473,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="button_userlist">
           <property name="maximumSize">
            <size>
             <width>150</width>
@@ -475,7 +481,33 @@
            </size>
           </property>
           <property name="text">
-           <string> Cancel</string>
+           <string> Read Later</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_refresh">
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="text">
+           <string> Refresh</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_exit">
+          <property name="maximumSize">
+           <size>
+            <width>150</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="text">
+           <string> Exit</string>
           </property>
          </widget>
         </item>

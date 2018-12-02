@@ -18,13 +18,24 @@
 #include "randListWindow.h"
 #include "choicewindow.h"
 
+//UserFile userList(books);
+
 void print_books(std::vector <Book> rand_list, std::vector <std::string> genres, Collection *books);
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    /*
+     * Choice Window ----------------------------------------------------------------------------------------------------------------------------
+     */
+
     ChoiceWindow w;
+
+
+    /*
+     * Splash Screen ----------------------------------------------------------------------------------------------------------------------------
+     */
 
     QMovie *movie = new QMovie("../rekt/book.gif");
     QLabel *processLabel = new QLabel(nullptr);
