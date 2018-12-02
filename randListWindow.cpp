@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <QLabel>
+#include <QFont>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -29,11 +30,6 @@ RandList::~RandList()
 std::vector <Book> Collection::get_list()
 {
     return this->list;
-}
-
-std::vector <int> Collection::get_user_list()
-{
-    return this->user_list;
 }
 
 Book Collection::get_book(int n)
@@ -122,8 +118,7 @@ std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, f
             int potential_book = (std::rand()%40)+(40*genres_indexes[i]);           /*Generate random int from 0 - 39, and scale it up for the required genre*/
 
             int duplicate = this->already_there(potential_book, rand_list);
-            if(this->list[potential_book].year >= year && this->list[potential_book].rating >= rating &&
-                    this->in_user_list((potential_book)) && duplicate) {
+            if(this->list[potential_book].year >= year && this->list[potential_book].rating >= rating && duplicate) {
                 rand_list.push_back(this->list[potential_book]);
                 book_not_done--;
             }
@@ -144,58 +139,71 @@ int Collection::already_there(int idn, std::vector <Book> lst) {
     return 1;
 }
 
-int Collection::in_user_list(int idn){
-    for(int i = 0; i < this->user_list.size(); i++) {
-        if(idn == this->user_list[i]) {
-            return 0;
-        }
-    }
-    return 1;
-}
-
 void Collection::extra_info(int id)
 {
     //gets info
     QWidget* window=new QWidget;
     QLabel* title=new QLabel(QString::fromStdString(get_book(id).title));
+    QFont titleFont("", 16, QFont::Bold);
+    title->setFont(titleFont);
+    title->setWordWrap(true);
     QLabel* author=new QLabel(QString::fromStdString(get_book(id).author));
+    QFont authorFont("", 14);
+    author->setFont(authorFont);
     QLabel* about=new QLabel(QString::fromStdString(get_book(id).about));
     QLabel* year=new QLabel(QString::fromStdString(std::to_string(get_book(id).year)));
-    QLabel* rating=new QLabel(QString::fromStdString(std::to_string(get_book(id).rating)));
+
+    std::ostringstream out;
+    out.precision(2);
+    out << std::fixed << get_book(id).rating;
+    QLabel* rating=new QLabel(QString::fromStdString(out.str()));
     QString num_jpg=QString::number(id);
     QPixmap image("../rekt/images/book_"+num_jpg+".jpg");
     QLabel* picture=new QLabel();
     picture->setPixmap(image);
     about->setWordWrap(true);
 
-    QPushButton *exit=new QPushButton("Exit");
+    QPushButton *exit=new QPushButton("  Exit");
     QObject::connect(exit, SIGNAL(clicked()), window, SLOT(close()));
 
     QSignalMapper *mapper=new QSignalMapper();
-    QPushButton *addtolist=new QPushButton("Buy Book");
-    QObject::connect(addtolist, SIGNAL(clicked()), mapper, SLOT(map()));
-    mapper->setMapping(addtolist, id);
+    QPushButton *buybutton=new QPushButton("  Buy Book");
+    QObject::connect(buybutton, SIGNAL(clicked()), mapper, SLOT(map()));
+    mapper->setMapping(buybutton, id);
     QObject::connect(mapper, SIGNAL(mapped(int)), SLOT(buy_book(int)));
 
-    //organizes info
+    QVBoxLayout *all_info = new QVBoxLayout;
+    QHBoxLayout *button_bar = new QHBoxLayout;
+    QHBoxLayout *info_tab = new QHBoxLayout;
+    QVBoxLayout *left_panel = new QVBoxLayout;
+    QVBoxLayout *right_panel = new QVBoxLayout;
     QVBoxLayout* top_info=new QVBoxLayout;
     QHBoxLayout* bottom_info=new QHBoxLayout;
-    QHBoxLayout* buttons=new QHBoxLayout;
-    QVBoxLayout* all_info=new QVBoxLayout;
     top_info->addWidget(title);
     top_info->addWidget(author);
     top_info->addWidget(year);
     top_info->addWidget(rating);
-//    top_info->addWidget(link);
     bottom_info->addWidget(about);
-    bottom_info->addWidget(picture);
-    buttons->addWidget(addtolist);
-    buttons->addWidget(exit);
-    all_info->addLayout(top_info);
-    all_info->addLayout(bottom_info);
-    all_info->addLayout(buttons);
+
+    left_panel->addLayout(top_info);
+    left_panel->addLayout(bottom_info);
+
+    left_panel->addSpacing(300);
+
+    right_panel->addWidget(picture);
+
+    info_tab->addLayout(left_panel);
+    info_tab->addLayout(right_panel);
+
+    button_bar->addWidget(buybutton);
+    button_bar->addWidget(exit);
+
+    all_info->addLayout(info_tab);
+    all_info->addLayout(button_bar);
+
     window->setLayout(all_info);
     window->show();
+
 }
 
 /*User List Functions*/
@@ -212,17 +220,23 @@ void print_books(std::vector <Book> rand_list, std::vector <std::string> genres,
     QWidget* window=new QWidget;
     window->setWindowTitle("RecommUi");
     QVBoxLayout* compile=new QVBoxLayout;
+
+    QLabel* title=new QLabel("RecommUi");
+    QFont titleFont("", 16);
+    title->setFont(titleFont);
+    compile->addWidget(title);
+
     for(int i=0;i<rand_list.size()-1;i++)
     {
         QSignalMapper *mapper=new QSignalMapper();
-        QPushButton *more_info=new QPushButton(QString::fromStdString(rand_list[i].title));
+        QPushButton *more_info=new QPushButton("  " + QString::fromStdString(rand_list[i].title));
         compile->addWidget(more_info);
         QObject::connect(more_info, SIGNAL(clicked()), mapper, SLOT(map()));
         mapper->setMapping(more_info, rand_list[i].id);
         QObject::connect(mapper, SIGNAL(mapped(int)), books, SLOT(extra_info(int)));
     }
 
-    QPushButton *exit=new QPushButton("Exit");
+    QPushButton *exit=new QPushButton("  Exit");
     compile->addWidget(exit);
     QObject::connect(exit, SIGNAL(clicked()), window, SLOT(close()));
 

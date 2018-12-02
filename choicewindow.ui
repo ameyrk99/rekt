@@ -64,13 +64,7 @@
         </property>
         <property name="font">
          <font>
-          <family>Fira Mono</family>
-          <pointsize>25</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-          <underline>false</underline>
-          <strikeout>false</strikeout>
-          <kerning>true</kerning>
+          <pointsize>28</pointsize>
          </font>
         </property>
         <property name="mouseTracking">
@@ -468,7 +462,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Find</string>
+           <string> Find</string>
           </property>
          </widget>
         </item>
@@ -481,7 +475,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Cancel</string>
+           <string> Cancel</string>
           </property>
          </widget>
         </item>
@@ -497,7 +491,7 @@
      <x>0</x>
      <y>0</y>
      <width>970</width>
-     <height>26</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuRecommUi">
