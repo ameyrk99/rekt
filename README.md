@@ -12,7 +12,11 @@ make
 ```
 
 ## Run
-`./Recommui`
+```
+./Recommui
+```
 
 ## Make Clean:
-`make clean`
+````
+make clean
+```
