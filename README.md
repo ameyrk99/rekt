@@ -1,24 +1,36 @@
-# Rekt
+# RecommUi
 
-## GUI project - CSE 1325
+### Group
+- Amey K
+- Endrit M
+- Allen G
+- Bryan H
 
-### Genres in order (40 each, starting at 0):
-- crime 
-- fiction
-- fantasy
-- non-fiction
-- mystery
-- clàssics
-- mangá
-- sci-fi
-- historical
-- horror
-- thriller
-- humor
-- suspense
-- romance
-- cooking
+### Dependencies:
+- [Qt](https://www.qt.io)
+- [Material Design Icons Font](https://materialdesignicons.com)
 
-### Images:
+### Compile
 
-In ./images as book_i.jpg where i is id
+```
+qmake Books.pro -spec linux-g++ CONFIG+=qtquickcompiler
+make
+```
+
+### Run
+```
+./Recommui
+```
+
+### Make Clean:
+```
+make clean
+```
+
+## Note
+The user list had sample books added at the start
+
+## Screenshot and Recording
+![screenshot](full.png)
+
+![recording](recording.mp4)
