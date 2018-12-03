@@ -18,8 +18,6 @@
 #include "randListWindow.h"
 #include "choicewindow.h"
 
-//UserFile userList(books);
-
 void print_books(std::vector <Book> rand_list, std::vector <std::string> genres, Collection *books);
 
 int main(int argc, char *argv[])

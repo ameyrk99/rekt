@@ -6,18 +6,19 @@
 #include <sstream>
 #include <string>
 
+/*displays the main page of the program*/
 ChoiceWindow::ChoiceWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ChoiceWindow)
 {
     ui->setupUi(this);
-    connect_Signals();
+    connect_Signals();  /*connects the spinbox and slider for the user to decide on a year*/
     connect_rating_Signals();
     ChoiceWindow::setWindowTitle("RecommUi");
-    this->books = new Collection();
-    this->books->read_file();
+    this->books = new Collection(); /*creates a Collection object*/
+    this->books->read_file(); /*stores all the info about the books*/
     this->books->read_user_file("userData.dat");
-    ui->spinBox_year->setValue(0);
+    ui->spinBox_year->setValue(0); /*initializes all the options the user can choose from to the minimum*/
     ui->slider_year->setValue(0);
     ui->spinBox_rating->setValue(0);
     ui->dial_rating->setValue(0);
@@ -97,6 +98,7 @@ void ChoiceWindow::new_Rating_Changed(int newRating)
        connect_rating_Signals();
 }
 
+/*checks what genres were chosen by the user*/
 void ChoiceWindow::on_genre_crime_clicked()
 {
     this->genres_chosen.push_back(0);
@@ -172,7 +174,7 @@ void ChoiceWindow::on_genre_cookbook_clicked()
     this->genres_chosen.push_back(14);
 }
 
-void ChoiceWindow::on_button_find_clicked()
+void ChoiceWindow::on_button_find_clicked() /*finds ten random books based on the criteria designated by the user*/
 {
     this->year = ui->slider_year->value();
     this->rating = ui->dial_rating->value();
@@ -185,12 +187,12 @@ void ChoiceWindow::on_button_find_clicked()
        }
     }
 
-    std::vector <Book> rand_gen = this->books->get_rand_list(this->genres_chosen, this->rating, this->year);
+    std::vector <Book> rand_gen = this->books->get_rand_list(this->genres_chosen, this->rating, this->year); /*randomly generates a vector of Collection objects*/
 
     this->books->display_books(rand_gen, genres, this->books);
 }
 
-void ChoiceWindow::on_button_refresh_clicked()
+void ChoiceWindow::on_button_refresh_clicked() /*refreshes the main window to put all the book options to their default values*/
 {
     this->genres_chosen.clear();
     ui->genre_crime->setChecked(false);
@@ -215,18 +217,18 @@ void ChoiceWindow::on_button_refresh_clicked()
     ui->dial_rating->setValue(0);
 }
 
-void ChoiceWindow::on_button_exit_clicked()
+void ChoiceWindow::on_button_exit_clicked() /*closes the window*/
 {
     this->close();
 }
 
-void ChoiceWindow::on_button_userlist_clicked()
+void ChoiceWindow::on_button_userlist_clicked() /*opens a window showing the user's list of books they want to get*/
 {
     books_added = books->get_list();
     id_nums = books->get_user_list();
 
     QWidget* window=new QWidget;
-    window->resize(600, 500);
+    window->resize(600, 500); /*resizes the window to properly fit the book*/
     window->setWindowTitle("RecommUi: To Read List");
     QVBoxLayout* all_info=new QVBoxLayout;
     QHBoxLayout* for_buttons=new QHBoxLayout;
@@ -238,7 +240,7 @@ void ChoiceWindow::on_button_userlist_clicked()
     QString book_chosen1;
     std::string book_chosen;
 
-    for(int i=0;i<id_nums.size();i++)
+    for(int i=0;i<id_nums.size();i++) /*goes through all the books that the user wants puts on their read list*/
     {
         book_chosen = books_added[id_nums[i]].title + " by " + books_added[id_nums[i]].author+" ("+std::to_string(books_added[id_nums[i]].year)+ ")";
         book_chosen1=QString::fromStdString(book_chosen);
@@ -247,8 +249,9 @@ void ChoiceWindow::on_button_userlist_clicked()
 
     model->setStringList(list);
     userListView->setModel(model);
-    userListView->setEditTriggers(QAbstractItemView::AnyKeyPressed | QAbstractItemView::DoubleClicked);
+    userListView->setEditTriggers(QAbstractItemView::AnyKeyPressed | QAbstractItemView::DoubleClicked); /*lets the user interact with the list*/
 
+    /*gives the buttons to give extra info on the books*/
     QPushButton *delete_book=new QPushButton("  Remove Book");
     QObject::connect(delete_book, SIGNAL(clicked()), this, SLOT(on_deleteButton_clicked()));
 
@@ -257,7 +260,6 @@ void ChoiceWindow::on_button_userlist_clicked()
 
     QPushButton *go_back=new QPushButton("  Back ");
     QObject::connect(go_back, SIGNAL(clicked()), window, SLOT(close()));
-
 
     for_buttons->addWidget(delete_book);
     for_buttons->addWidget(button_info);
@@ -268,7 +270,7 @@ void ChoiceWindow::on_button_userlist_clicked()
     window->show();
 }
 
-void ChoiceWindow::on_deleteButton_clicked()
+void ChoiceWindow::on_deleteButton_clicked() /*deletes the book the user wants to delete*/
 {
     int row = userListView->currentIndex().row();
     model->removeRows(row, 1);
@@ -277,10 +279,11 @@ void ChoiceWindow::on_deleteButton_clicked()
     this->books->output_file("userData.dat");
 }
 
-void::ChoiceWindow::on_info_button_clicked() {
+void::ChoiceWindow::on_info_button_clicked() { /*displays a window showing the info of a specific book*/
     Book b = books->get_book(books->user_list[userListView->currentIndex().row()]);
     int id = b.id;
 
+    /*designs the display*/
     QWidget* window=new QWidget;
     QLabel* title=new QLabel(QString::fromStdString(books->get_book(id).title));
     QFont titleFont("", 16, QFont::Bold);
@@ -346,7 +349,7 @@ void::ChoiceWindow::on_info_button_clicked() {
     window->show();
 }
 
-void ChoiceWindow::user_list_buy_book(int idn) {
+void ChoiceWindow::user_list_buy_book(int idn) { /*opens a link for the user to buy the book*/
     QString link = QString::fromStdString(this->books->get_book(idn).link);
     QDesktopServices::openUrl(QUrl(link));
 }

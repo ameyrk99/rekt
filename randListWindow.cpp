@@ -58,6 +58,7 @@ void Collection::read_file()
 
     while(std::getline (inFile, line))
     {
+        /* Fill the Book vector with data */
 
         std::string delimiter = "~";
         size_t pos = 0;
@@ -104,6 +105,7 @@ void Collection::read_file()
 }
 
 std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, float rating, int year) {
+    /* Generates a vector of random books with the parameters by the user */
     int total_genres = genres_indexes.size();
     std::vector <Book> rand_list;
     /*Seed for random*/
@@ -136,6 +138,7 @@ std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, f
 }
 
 int Collection::already_there(int idn, std::vector <Book> lst) {
+    /*discards duplicates given by random*/
     for(int i = 0; i < lst.size(); i++) {
         if(idn == lst[i].id) {
             return 0;
@@ -144,7 +147,8 @@ int Collection::already_there(int idn, std::vector <Book> lst) {
     return 1;
 }
 
-int Collection::in_user_list(int idn){
+int Collection::in_user_list(int idn) {
+    /*discards books for random list that are already in user list*/
     for(int i = 0; i < this->user_list.size(); i++) {
         if(idn == this->user_list[i]) {
             return 0;
@@ -155,9 +159,13 @@ int Collection::in_user_list(int idn){
 
 void Collection::display_books(std::vector <Book> rand_list, std::vector <std::string> genres, Collection *books)
 {
+    /*displays random list of books as buttons*/
+
     QWidget *display_window =new QWidget;
     display_window->setWindowTitle("Try These");
     QVBoxLayout* compile=new QVBoxLayout;
+
+    /*makes button for each book in random list*/
     for(int i=0;i<rand_list.size()-1;i++)
     {
         QSignalMapper *mapper=new QSignalMapper();
@@ -178,6 +186,8 @@ void Collection::display_books(std::vector <Book> rand_list, std::vector <std::s
 
 void Collection::extra_info(int id)
 {
+    /*displays information about book selected from random list*/
+
     QWidget* window=new QWidget;
     QLabel* title=new QLabel(QString::fromStdString(get_book(id).title));
     QFont titleFont("", 16, QFont::Bold);
@@ -199,6 +209,7 @@ void Collection::extra_info(int id)
     picture->setPixmap(image);
     about->setWordWrap(true);
 
+    /* Buttons to operate window */
     QPushButton *exit=new QPushButton("  Exit");
     QObject::connect(exit, SIGNAL(clicked()), window, SLOT(close()));
 
@@ -254,12 +265,16 @@ void Collection::extra_info(int id)
 
 void Collection::buy_book(int idn)
 {
-        QString link = QString::fromStdString(get_book(idn).link);
-        QDesktopServices::openUrl(QUrl(link));
+    /*opens link to selected book*/
+
+    QString link = QString::fromStdString(get_book(idn).link);
+    QDesktopServices::openUrl(QUrl(link));
 }
 
 void Collection::add_book(int idn)
 {
+    /*adds book to user list*/
+
     this->user_list.push_back(idn);
     QWidget* window=new QWidget;
     QLabel *label=new QLabel("Book has been added to your list!");
@@ -275,14 +290,16 @@ void Collection::add_book(int idn)
 
 void Collection::delete_book(int idn)
 {
-//    this->user_list.erase(user_list.begin() + 1);
+    /*removes book from user list*/
+
     this->output_file("userData.dat");
     return;
 }
 
 void Collection::read_user_file(std::string filename)
 {
-    /*Reads file*/
+    /*reads user file for previously stored books*/
+
     std::ifstream inFile;
     inFile.open(filename);
 
@@ -311,6 +328,8 @@ void Collection::read_user_file(std::string filename)
 
 void Collection::output_file(std::string filename)
 {
+    /*outputs stored user list*/
+    
     std::ofstream outFile;
     outFile.open(filename);
     int i = 0;

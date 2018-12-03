@@ -1,22 +1,31 @@
 # RecommUi
 
-## Dependencies:
+### Group
+- Amey K
+- Endrit M
+- Allen G
+- Bryan H
+
+### Dependencies:
 - [Qt](https://www.qt.io)
 - [Material Design Icons Font](https://materialdesignicons.com)
 
-## Compile
+### Compile
 
 ```
 qmake Books.pro -spec linux-g++ CONFIG+=qtquickcompiler
 make
 ```
 
-## Run
+### Run
 ```
 ./Recommui
 ```
 
-## Make Clean:
+### Make Clean:
 ```
 make clean
 ```
+
+## Note
+The user list had sample books added at the start
