@@ -6,7 +6,6 @@
 #include <fstream>
 #include <sstream>
 #include <QLabel>
-#include <QFont>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -32,6 +31,11 @@ std::vector <Book> Collection::get_list()
     return this->list;
 }
 
+std::vector <int> Collection::get_user_list()
+{
+    return this->user_list;
+}
+
 Book Collection::get_book(int n)
 {
     return this->list[n];
@@ -40,13 +44,13 @@ Book Collection::get_book(int n)
 void Collection::read_file()
 {
     /*Reads file*/
-    std::string filename = "../rekt-master/booksData.csv";
+    std::string filename = "booksData.csv";
     std::ifstream inFile;
     inFile.open(filename);
 
     if(!inFile)
     {
-        std::cout<<"Unable to open file.\n";
+        std::cout<<"Unable to open file booksData.csv.\n";
         exit(1);
     }
 
@@ -117,9 +121,10 @@ std::vector <Book> Collection::get_rand_list(std::vector <int> genres_indexes, f
 
         for(int j = 0; j < 20 && book_not_done; j++) {                              /*Generates random indexes in range 20 times*/
             int potential_book = (std::rand()%40)+(40*genres_indexes[i]);           /*Generate random int from 0 - 39, and scale it up for the required genre*/
-
+            /*checking if book meets criteria*/
             int duplicate = this->already_there(potential_book, rand_list);
-            if(this->list[potential_book].year >= year && this->list[potential_book].rating >= rating && duplicate) {
+            if(this->list[potential_book].year >= year && this->list[potential_book].rating >= rating &&
+                    this->in_user_list((potential_book)) && duplicate) {
                 rand_list.push_back(this->list[potential_book]);
                 book_not_done--;
             }
@@ -141,6 +146,42 @@ int Collection::already_there(int idn, std::vector <Book> lst) {
     return 1;
 }
 
+/*discards books for random list that are already in user list*/
+int Collection::in_user_list(int idn){
+    for(int i = 0; i < this->user_list.size(); i++) {
+        if(idn == this->user_list[i]) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+/*displays random list of books as buttons*/
+void Collection::display_books(std::vector <Book> rand_list, std::vector <std::string> genres, Collection *books)
+{
+    QWidget *display_window =new QWidget;
+    display_window->setWindowTitle("Try These");
+    QVBoxLayout* compile=new QVBoxLayout;
+
+    /*makes button for each book in random list*/
+    for(int i=0;i<rand_list.size()-1;i++)
+    {
+        QSignalMapper *mapper=new QSignalMapper();
+        QPushButton *more_info=new QPushButton(QString::fromStdString(rand_list[i].title));
+        compile->addWidget(more_info);
+        QObject::connect(more_info, SIGNAL(clicked()), mapper, SLOT(map()));
+        mapper->setMapping(more_info, rand_list[i].id);
+        QObject::connect(mapper, SIGNAL(mapped(int)), books, SLOT(extra_info(int)));
+    }
+
+    QPushButton *exit=new QPushButton("  Back ");
+    compile->addWidget(exit);
+    QObject::connect(exit, SIGNAL(clicked()), display_window, SLOT(close()));
+
+    display_window->setLayout(compile);
+    display_window->show();
+}
+
 void Collection::extra_info(int id) /*displays information about book selected from random list*/
 {
     //gets book info
@@ -159,26 +200,31 @@ void Collection::extra_info(int id) /*displays information about book selected f
     out.precision(2);
     out << std::fixed << get_book(id).rating;
     QLabel* rating=new QLabel(QString::fromStdString(out.str()));
-
-    //display image
     QString num_jpg=QString::number(id);
-    QPixmap image("../rekt-master/images/book_"+num_jpg+".jpg");
+    QPixmap image("images/book_"+num_jpg+".jpg");
     QLabel* picture=new QLabel();
     picture->setPixmap(image);
     about->setWordWrap(true);
 
-    //exit book info
     QPushButton *exit=new QPushButton("  Exit");
     QObject::connect(exit, SIGNAL(clicked()), window, SLOT(close()));
 
-    //button for link to buy book
-    QSignalMapper *mapper=new QSignalMapper();
-    QPushButton *buybutton=new QPushButton("  Buy Book");
-    QObject::connect(buybutton, SIGNAL(clicked()), mapper, SLOT(map()));
-    mapper->setMapping(buybutton, id);
-    QObject::connect(mapper, SIGNAL(mapped(int)), SLOT(buy_book(int)));
+    //button to add book to user list
+    QSignalMapper *mapper1 = new QSignalMapper();
+    QPushButton *to_read = new QPushButton("  Add to Read List");
+    QObject::connect(to_read, SIGNAL(clicked()), mapper1, SLOT(map()));
+    mapper1->setMapping(to_read, id);
+    QObject::connect(mapper1, SIGNAL(mapped(int)), SLOT(add_book(int)));
 
-    //organizes widgets for window
+    //button for link to buy book
+    QSignalMapper *mapper2=new QSignalMapper();
+    QPushButton *buybutton=new QPushButton("  Buy Book");
+    QObject::connect(buybutton, SIGNAL(clicked()), mapper2, SLOT(map()));
+    mapper2->setMapping(buybutton, id);
+    QObject::connect(mapper2, SIGNAL(mapped(int)), SLOT(buy_book(int)));
+
+
+    //organizes info
     QVBoxLayout *all_info = new QVBoxLayout;
     QHBoxLayout *button_bar = new QHBoxLayout;
     QHBoxLayout *info_tab = new QHBoxLayout;
@@ -202,6 +248,7 @@ void Collection::extra_info(int id) /*displays information about book selected f
     info_tab->addLayout(left_panel);
     info_tab->addLayout(right_panel);
 
+    button_bar->addWidget(to_read);
     button_bar->addWidget(buybutton);
     button_bar->addWidget(exit);
 
@@ -210,44 +257,77 @@ void Collection::extra_info(int id) /*displays information about book selected f
 
     window->setLayout(all_info);
     window->show();
-
 }
 
 /*User List Functions*/
 
-void Collection::buy_book(int id) /*opens link to selected book*/
+void Collection::buy_book(int idn) /*opens link to selected book*/
 {
-        QString link = QString::fromStdString(get_book(id).link);
+        QString link = QString::fromStdString(get_book(idn).link);
         QDesktopServices::openUrl(QUrl(link));
 }
 
-/*displays random list of books as buttons*/
-void print_books(std::vector <Book> rand_list, std::vector <std::string> genres, Collection *books)
+void Collection::add_book(int idn) /*adds book to user list*/
 {
+    this->user_list.push_back(idn);
     QWidget* window=new QWidget;
-    window->setWindowTitle("RecommUi");
-    QVBoxLayout* compile=new QVBoxLayout;
+    QLabel *label=new QLabel("Book has been added to your list!");
+    QPushButton *okay=new QPushButton("OK");
+    QObject::connect(okay, SIGNAL(clicked()), window, SLOT(close()));
+    QVBoxLayout *notify=new QVBoxLayout;
+    notify->addWidget(label);
+    notify->addWidget(okay);
+    window->setLayout(notify);
+    window->show();
+   this->output_file("userData.dat");
+}
 
-    QLabel* title=new QLabel("RecommUi");
-    QFont titleFont("", 16);
-    title->setFont(titleFont);
-    compile->addWidget(title);
+void Collection::delete_book(int idn) /*removes book from user list*/
+{
+//    this->user_list.erase(user_list.begin() + 1);
+    this->output_file("userData.dat");
+    return;
+}
 
-    /*makes button for each book in random list*/
-    for(int i=0;i<rand_list.size()-1;i++)
+void Collection::read_user_file(std::string filename) /*reads user file for previously stored books*/
+{
+    /*Reads file*/
+    std::ifstream inFile;
+    inFile.open(filename);
+
+    if(!inFile)
     {
-        QSignalMapper *mapper=new QSignalMapper();
-        QPushButton *more_info=new QPushButton("  " + QString::fromStdString(rand_list[i].title));
-        compile->addWidget(more_info);
-        QObject::connect(more_info, SIGNAL(clicked()), mapper, SLOT(map()));
-        mapper->setMapping(more_info, rand_list[i].id);
-        QObject::connect(mapper, SIGNAL(mapped(int)), books, SLOT(extra_info(int)));
+        std::cout<<"Unable to open file userData.dat.\n";
+        exit(1);
     }
 
-    QPushButton *exit=new QPushButton("  Exit");
-    compile->addWidget(exit);
-    QObject::connect(exit, SIGNAL(clicked()), window, SLOT(close()));
+    std::string line;
 
-    window->setLayout(compile);
-    window->show();
+    while(std::getline (inFile, line))
+    {
+
+        std::string delimiter = "\n";
+        size_t pos = 0;
+        std::string token;
+        int test = 0;
+
+        pos = line.find(delimiter);
+        test = std::stoi(line.substr(0, pos));
+        this->user_list.push_back(test);
+//        line.erase(0, pos+1);
+    }
+}
+
+void Collection::output_file(std::string filename) /*outputs stored user list*/
+{
+    std::ofstream outFile;
+    outFile.open(filename);
+    int i = 0;
+
+    while (i < (this->user_list.size()))
+    {
+        outFile<<this->user_list[i]<< std::endl;
+        i++;
+    }
+    outFile.close();
 }
